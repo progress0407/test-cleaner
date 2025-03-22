@@ -40,6 +40,7 @@ public class TestCleaner {
 
             // 외래 키 제약조건 다시 활성화
             statement.execute("SET FOREIGN_KEY_CHECKS = 1");
+
         } catch (Exception exception) {
             System.out.println(exception);
         }
