@@ -1,21 +1,69 @@
 plugins {
     id 'java'
+    id 'org.springframework.boot' version '3.4.3'
+    id 'io.spring.dependency-management' version '1.1.7'
 }
 
 group = 'io.philo'
 version = '1.0-SNAPSHOT'
 
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
 repositories {
     mavenCentral()
 }
 
-dependencies {
-    implementation 'mysql:mysql-connector-java:8.0.33'
+subprojects {
 
-    testImplementation platform('org.junit:junit-bom:5.10.0')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
+    apply plugin: 'java'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(17)
+        }
+    }
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+
+        // ===========    ORM    ===========
+        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+        // ===========    DB    ===========
+        runtimeOnly 'com.h2database:h2'
+        runtimeOnly 'com.mysql:mysql-connector-j'
+
+        // ===========    DevTools    ===========
+        annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+        compileOnly 'org.projectlombok:lombok'
+        annotationProcessor 'org.projectlombok:lombok'
+        testCompileOnly 'org.projectlombok:lombok'
+        testAnnotationProcessor 'org.projectlombok:lombok'
+
+        testImplementation platform('org.junit:junit-bom:5.10.0')
+        testImplementation 'org.junit.jupiter:junit-jupiter'
+    }
+
+    test {
+        useJUnitPlatform()
+    }
 }
 
-test {
-    useJUnitPlatform()
+project(':testing') {
+    dependencies {
+        implementation project(':core')
+    }
 }

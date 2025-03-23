@@ -1,2 +1,4 @@
 rootProject.name = 'test-cleaner'
 
+include('core')
+include('testing')
